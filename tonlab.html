@@ -100,5 +100,51 @@
   <footer>
     <p>© 2025 Example Page</p>
   </footer>
+  <script>
+    // Cursor glow effect
+    const cursor = document.createElement('div');
+    cursor.style.position = 'fixed';
+    cursor.style.width = '20px';
+    cursor.style.height = '20px';
+    cursor.style.borderRadius = '50%';
+    cursor.style.pointerEvents = 'none';
+    cursor.style.background = 'rgba(255,255,255,0.5)';
+    cursor.style.boxShadow = '0 0 15px rgba(255,255,255,0.8)';
+    cursor.style.transform = 'translate(-50%, -50%)';
+    cursor.style.zIndex = '9999';
+    cursor.style.transition = '0.08s linear';
+    document.body.appendChild(cursor);
+
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    // Rat walking animation
+    const rat = document.createElement('div');
+    rat.style.position = 'fixed';
+    rat.style.bottom = '20px';
+    rat.style.left = '-80px';
+    rat.style.width = '60px';
+    rat.style.height = '40px';
+    rat.style.backgroundImage = "url('https://i.imgur.com/V2aQ6z7.png')";
+    rat.style.backgroundSize = 'contain';
+    rat.style.backgroundRepeat = 'no-repeat';
+    rat.style.animation = 'walkRat 15s linear infinite';
+    rat.style.zIndex = '9999';
+    document.body.appendChild(rat);
+
+    // Add CSS animation dynamically
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes walkRat {
+        0% { left: -100px; transform: scaleX(1); }
+        49% { left: calc(100% + 100px); transform: scaleX(1); }
+        50% { transform: scaleX(-1); }
+        100% { left: -100px; transform: scaleX(-1); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>
