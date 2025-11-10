@@ -199,7 +199,6 @@
       </div>
       <div style="display:flex; gap:8px; align-items:center;">
         <button class="btn ghost" id="theme" aria-label="Toggle theme">🌗 Theme</button>
-        <!-- NEW: Calculator button next to Theme -->
         <a class="btn inline-link" id="calcBtn" href="calculator.html" aria-label="Open Laboratory Calculator">🧮 Calculator</a>
         <a class="btn primary inline-link" href="https://github.com/" target="_blank" rel="noreferrer noopener">GitHub</a>
       </div>
@@ -234,7 +233,6 @@
 
   <script>
     // ---------- DATA (Minimal: index only; each LR opens its own file) ----------
-    // Known entries from your lore; others default to Undefined.
     const KNOWN = {
       "LR-001": { codename: "Serial Killer", status: "Red" },
       "LR-002": { codename: "Wau Tak Jadi", status: "Yellow" },
@@ -245,7 +243,7 @@
       "LR-016": { codename: "—", status: "Neutralized" },
       "LR-017": { codename: "Mother of Tundra", status: "Black" },
       "LR-018": { codename: "Murderous Rat", status: "Neutralized" }
-      // LR-019 (Rendang Pak Munawer) not added yet → leave Undefined as requested
+      // LR-019 (Rendang Pak Munawer) not added yet → leave Undefined
     };
 
     // Build 001..030
@@ -291,7 +289,7 @@
         <section class="hero">
           <div class="card">
             <h2>Laboratory Archive Index</h2>
-            <p class="muted">A simple registry of LR files. Numbers reflect <em>discovery</em>, not strength. Built by Min to reduce confusion.</p>
+            <p class="muted">A registry of LR files. Numbers reflect <em>discovery</em>, not strength. Built by Min to reduce confusion.</p>
             <div class="bar">
               <span class="chip">No Ethics Board</span>
               <span class="chip">Test • Observe • Cross-Test</span>
