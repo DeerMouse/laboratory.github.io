@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LR-002 — Wau Tak Jadi</title>
+  <meta name="description" content="The Laboratory — LR-002 Wau Tak Jadi file." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0e0f12;
+      --panel: #121418;
+      --panel-2:#15181d;
+      --ink: #e7e9ed;
+      --muted:#8c96a3;
+      --line: rgba(255,255,255,0.08);
+      --accent:#e6b422;
+      --danger:#ef4444;
+      --warn:#f59e0b;
+      --ok:#22c55e;
+      --card:#14171c;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --r-lg: 16px;
+      --r-md: 12px;
+      --r-sm: 10px;
+      --ring: 0 0 0 2px rgba(230,180,34,.18);
+    }
+    [data-theme="light"]{
+      --bg:#f6f7fb; --panel:#ffffff; --panel-2:#eef1f6; --ink:#0f141a; --muted:#5b6574;
+      --line: rgba(0,0,0,0.08); --accent:#b08900; --danger:#b91c1c; --warn:#a16207; --ok:#15803d;
+      --card:#ffffff; --shadow: 0 10px 30px rgba(0,0,0,.08); --ring: 0 0 0 2px rgba(176,137,0,.18);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(1200px 800px at 85% -10%, rgba(230,180,34,.06), transparent 60%),
+        radial-gradient(1200px 900px at -10% 90%, rgba(110,231,183,.05), transparent 60%),
+        var(--bg);
+      color:var(--ink);
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:10px 16px; background: var(--panel-2); border-bottom:1px solid var(--line);
+      position:sticky; top:0; z-index:10;
+    }
+    .brand{display:flex; align-items:center; gap:12px;}
+    .mark{ width:36px; height:36px; border-radius:10px; background:conic-gradient(from 180deg, #20242b, #1a1f27, #2a2f38); border:1px solid var(--line); position:relative;}
+    .mark:after{content:""; position:absolute; inset:7px; border-radius:6px; border:2px solid var(--accent); transform: rotate(8deg); opacity:.85;}
+    .brand h1{ margin:0; font-size:15px; letter-spacing:.14em; text-transform:uppercase; font-weight:800; }
+    .btn{
+      border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:10px;
+      padding:8px 12px; font-weight:700; cursor:pointer; transition:.18s; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn:active{ transform: translateY(0); }
+    .btn.primary{ border-color: rgba(230,180,34,.35); box-shadow: var(--shadow); }
+    .btn.ghost{ background:transparent; }
+
+    main{ padding:18px; max-width: 1100px; margin: 0 auto; }
+    .grid{ display:grid; grid-template-columns: 1fr; gap:14px; }
+    .card{ background:var(--card); border:1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); padding:18px; }
+    .heading{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .id{ font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+    h2{ margin:4px 0 6px 0; }
+    .meta{ display:flex; flex-wrap:wrap; gap:8px; }
+    .chip{ padding:6px 10px; border-radius:999px; border:1px solid var(--line); font-weight:800; font-size:11px; letter-spacing:.06em; color:var(--muted); }
+    .chip.yellow{ background: rgba(245,158,11,.12); color:#ffd482; border-color: rgba(245,158,11,.35); }
+    .chip.status{ background: rgba(255,255,255,.04); }
+    .sub{ color:var(--muted); margin:0; }
+
+    .split{ display:grid; grid-template-columns: 1.2fr .8fr; gap:14px; }
+    .section h3{ margin:0 0 8px 0; }
+    .kv{ width:100%; border-collapse:collapse; }
+    .kv th, .kv td{ padding:10px 12px; border-bottom:1px solid var(--line); text-align:left; }
+    .kv th{ width:210px; color:var(--muted); font-weight:600; }
+
+    .notice{ padding:12px 14px; border:1px dashed rgba(230,180,34,.45); border-radius:12px; background:rgba(230,180,34,.06); }
+    .footer{ margin:14px 0 0; padding:12px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+
+    @media (max-width: 900px){ .split{ grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body data-theme="dark">
+  <header>
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <h1>LR-002 — Wau Tak Jadi</h1>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <a class="btn" href="TheLaboratory.html">← Index</a>
+      <a class="btn ghost" id="theme">🌗 Theme</a>
+      <a class="btn primary" href="lr003.html">Next: LR-003 →</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid">
+      <!-- Header Card -->
+      <section class="card">
+        <div class="heading">
+          <div>
+            <div class="id">File: LR-002 • Artifact-Type Anomaly</div>
+            <h2>“Wau Tak Jadi”</h2>
+            <p class="sub">Glitched wau-kite artifact exhibiting illusion effects and checkpoint-like teleport behavior.</p>
+          </div>
+          <div class="meta">
+            <span class="chip yellow">Yellow Zone</span>
+            <span class="chip status">Status: Active</span>
+            <span class="chip">Owner: Founders (Light & Ton)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Body -->
+      <section class="card split">
+        <div class="section">
+          <h3>Overview</h3>
+          <p>LR-002 was discovered during Founder Light’s attempt to build a working <em>wau</em> (traditional kite). The artifact exhibits inconsistent physical behavior—often behaving as if “stuck” to the floor and difficult to move—along with observer-side illusions.</p>
+
+          <h3>Observed Effects</h3>
+          <ul>
+            <li><strong>“Stuck” Behavior:</strong> The wau frequently resists movement and behaves as if fixed to the ground.</li>
+            <li><strong>Observer Illusion:</strong> To bystanders, the wielder sometimes appears <em>held by the wau</em> (positions seem swapped), while the wielder reports normal handling.</li>
+            <li><strong>Checkpoint Teleport:</strong> If the wielder <em>holds</em> the wau and brings it to a location, then <em>releases</em> it there, later <em>re-grasping</em> the wau will return them to the last release point instantly.</li>
+          </ul>
+
+          <div class="notice">
+            <strong>Note:</strong> Founder Ton report: practical use of the checkpoint behavior for sudden “disappearances,” typically to provoke Founder Light.
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Administrative</h3>
+          <table class="kv">
+            <tr><th>Classification</th><td>Yellow Zone</td></tr>
+            <tr><th>Status</th><td>Active</td></tr>
+            <tr><th>Containment</th><td>Standard artifact locker when not in test</td></tr>
+            <tr><th>Collateral Risk</th><td>Low (illusions may cause confusion)</td></tr>
+            <tr><th>Ownership</th><td>Founders (Light & Ton)</td></tr>
+            <tr><th>Testing</th><td>Permitted (No sale/release)</td></tr>
+          </table>
+
+          <h3 style="margin-top:12px;">Handling Notes</h3>
+          <ul>
+            <li>Announce “release points” when setting checkpoints to avoid accidental teleports.</li>
+            <li>Observers should avoid making safety calls based on illusion-only perception.</li>
+            <li>Keep walkways clear: sudden returns to prior release points can cause collisions.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <section class="card">
+        <div class="footer">
+          <span>Filed by: Min Kuznetzov (Intern). Reviewed by Founders.</span>
+          <span>
+            <a class="btn" href="TheLaboratory.html">← Back to Index</a>
+            <a class="btn primary" href="lr003.html">Next: LR-003 →</a>
+          </span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Theme toggle (consistent with main/index)
+    function setTheme(next){
+      const root = document.body;
+      const curr = root.getAttribute('data-theme') || 'dark';
+      const fin = next || (curr === 'dark' ? 'light' : 'dark');
+      root.setAttribute('data-theme', fin);
+      localStorage.setItem('labTheme', fin);
+    }
+    const saved = localStorage.getItem('labTheme');
+    if(saved) document.body.setAttribute('data-theme', saved);
+    document.getElementById('theme').addEventListener('click', ()=>setTheme());
+  </script>
+</body>
+</html>
