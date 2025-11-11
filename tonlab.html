@@ -3,33 +3,42 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>[CORRUPTION: CODE 503]</title>
+    <title>[SYSTEM FAILURE - QUARANTINE]</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-        /* Keyframes for Heavy Glitch Effects */
-        @keyframes staticFlicker {
-            0% { opacity: 0.98; }
-            5% { opacity: 0.8; }
-            10% { opacity: 1; }
-            15% { opacity: 0.9; }
-            100% { opacity: 0.98; }
-        }
+        /* --- Keyframes for Dynamic Effects --- */
 
-        @keyframes colorShift {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
+        /* Heavy Glitch (Title) */
         @keyframes textGlitch {
-            0% { transform: translate(0); text-shadow: 2px 2px #ff0055, -2px -2px #33ccff; }
-            20% { transform: translate(1px, -1px); text-shadow: -1px 1px #ff0055, 1px -1px #33ccff; }
-            40% { transform: translate(-2px, 2px); text-shadow: 3px 3px #ff0055, -3px -3px #33ccff; }
-            60% { transform: translate(1px, 1px); text-shadow: -2px 0 #ff0055, 2px 0 #33ccff; }
-            80% { transform: translate(-1px, -1px); text-shadow: 0 3px #ff0055, 0 -3px #33ccff; }
-            100% { transform: translate(0); text-shadow: 2px 2px #ff0055, -2px -2px #33ccff; }
+            0% { transform: translate(0); text-shadow: 2px 2px #ff0055, -2px -2px #ffff00; } /* Added Yellow to Glitch */
+            20% { transform: translate(1px, -1px); text-shadow: -1px 1px #ff0055, 1px -1px #ffff00; }
+            40% { transform: translate(-2px, 2px); text-shadow: 3px 3px #ff0055, -3px -3px #ffff00; }
+            60% { transform: translate(1px, 1px); text-shadow: -2px 0 #ff0055, 2px 0 #ffff00; }
+            80% { transform: translate(-1px, -1px); text-shadow: 0 3px #ff0055, 0 -3px #ffff00; }
+            100% { transform: translate(0); text-shadow: 2px 2px #ff0055, -2px -2px #ffff00; }
         }
+
+        /* Ambient Body Flicker/Noise */
+        @keyframes staticNoise {
+            0% { opacity: 0.99; filter: brightness(1.0); }
+            5% { opacity: 0.98; filter: brightness(0.95); }
+            10% { opacity: 1; filter: brightness(1.05); }
+            15% { opacity: 0.97; filter: brightness(0.98); }
+            100% { opacity: 0.99; filter: brightness(1.0); }
+        }
+        
+        /* Light Flickering Overlay (Red Alert) */
+        @keyframes lightFlicker {
+            0%, 100% { box-shadow: 0 0 100px rgba(255, 0, 0, 0.0); background-color: rgba(255, 0, 0, 0.0); }
+            2% { box-shadow: 0 0 100px rgba(255, 0, 0, 0.4); background-color: rgba(255, 0, 0, 0.1); }
+            4% { box-shadow: 0 0 100px rgba(255, 255, 0, 0.2); background-color: rgba(255, 255, 0, 0.05); }
+            6% { box-shadow: 0 0 100px rgba(255, 0, 0, 0.0); background-color: rgba(255, 0, 0, 0.0); }
+            10% { box-shadow: 0 0 100px rgba(255, 0, 0, 0.3); background-color: rgba(255, 0, 0, 0.15); }
+            12% { box-shadow: 0 0 100px rgba(255, 0, 0, 0.0); background-color: rgba(255, 0, 0, 0.0); }
+        }
+
 
         /* --- General Body and Background --- */
         body {
@@ -37,12 +46,25 @@
             padding: 0;
             font-family: 'Share Tech Mono', monospace;
             background: #000 url('https://raw.githubusercontent.com/lightragon/imageshost/main/rhodes_dark_bg.jpg') no-repeat center/cover;
-            color: #ccffcc; /* Irradiated Green */
+            color: #ccffcc; 
             overflow-x: hidden;
             min-height: 100vh;
-            /* Applying more general noise/flicker */
-            animation: staticFlicker 0.5s infinite alternate; 
-            filter: contrast(105%); /* Increases contrast for a harsher look */
+            /* Constant noise and brightness shift */
+            animation: staticNoise 0.2s infinite alternate; 
+            filter: contrast(110%);
+        }
+        
+        /* New Light Flickering Element */
+        .flicker-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 30; /* Above the main overlay */
+            /* Apply the rapid, intermittent flicker effect */
+            animation: lightFlicker 1s infinite step-end;
         }
 
         .overlay {
@@ -51,12 +73,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Heavy Glitch Overlay: Adds heavy red/blue screen distortion */
+            /* Heavy Glitch Overlay */
             background: 
-                linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+                linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)),
                 repeating-linear-gradient(0deg, #0f0c08 0%, #0f0c08 2px, transparent 2px, transparent 4px),
                 repeating-linear-gradient(90deg, #0f0c08 0%, #0f0c08 1px, transparent 1px, transparent 2px);
-            box-shadow: inset 0 0 100px rgba(255, 0, 85, 0.4); /* Inner Red Glow */
+            box-shadow: inset 0 0 150px rgba(255, 0, 85, 0.6); /* Stronger inner red glow */
             pointer-events: none;
             z-index: 10;
         }
@@ -66,32 +88,28 @@
             position: relative;
             z-index: 20;
             text-align: center;
-            padding: 100px 20px 40px;
-            animation: fadeIn 2s ease;
+            padding: 80px 20px 30px;
         }
 
         header h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 4.5rem; /* Larger */
-            letter-spacing: 10px; /* Wider spacing for distortion */
-            color: #ff3366; 
+            font-size: 5rem;
+            letter-spacing: 12px;
+            color: #ff0055; 
             /* Heavy Glitch animation applied to title */
-            animation: textGlitch 0.1s infinite alternate, colorShift 20s linear infinite;
+            animation: textGlitch 0.05s infinite alternate, colorShift 20s linear infinite;
         }
 
         header p {
-            font-size: 1.2rem;
-            opacity: 0.5; /* More faded */
-            color: #ff0055; /* Changed to red for alarm */
-            border: 1px solid rgba(255, 0, 85, 0.5);
-            padding: 5px 10px;
+            font-size: 1.3rem;
+            opacity: 0.8;
+            color: #ffff00; /* Alarm Yellow */
+            border: 2px solid #ff0055; /* Red border */
+            padding: 8px 15px;
             display: inline-block;
             margin-top: 15px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: skewX(-5deg); } /* Added slight skew for uneasy feeling */
-            to { opacity: 1; transform: skewX(0); }
+            text-transform: uppercase;
+            background: rgba(255, 0, 85, 0.1);
         }
 
         /* --- Content Container and Cards (Experiments) --- */
@@ -99,40 +117,39 @@
             position: relative;
             z-index: 20;
             width: 90%;
-            max-width: 800px; /* Narrower for more focused feel */
+            max-width: 800px; 
             margin: 40px auto 80px;
         }
 
         .card {
-            background: rgba(10, 0, 15, 0.95); /* Nearly solid black */
-            border: 1px solid rgba(255, 51, 102, 0.3);
-            border-left: 4px solid #ff0055; /* Brighter, harsher red accent */
+            background: rgba(10, 0, 15, 0.98); 
+            border: 1px solid rgba(255, 255, 0, 0.5); /* Yellow/Warning Border */
+            border-left: 6px solid #ffaa00; /* Intense Orange/Amber accent */
             padding: 25px;
             margin: 30px 0;
-            border-radius: 0; /* Removed rounding for a sharper, colder look */
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text x="0" y="20" font-size="20" fill="#ff0055">[E]</text></svg>') 12 12, pointer; /* Custom, glitch-like cursor */
-            transition: all 0.1s ease;
-            backdrop-filter: blur(1px) brightness(0.8);
-            box-shadow: 0 0 5px rgba(255, 0, 85, 0.8); /* Stronger red glow */
+            border-radius: 0; 
+            cursor: pointer;
+            transition: all 0.05s ease-out; /* Faster transition for impact */
+            box-shadow: 0 0 8px rgba(255, 170, 0, 0.8); /* Orange glow */
         }
 
         .card:hover {
-            transform: skewX(-1deg) scale(1.02); /* Skew on hover for distortion */
-            background: rgba(30, 0, 0, 0.9); /* Deep Red on hover */
-            box-shadow: 0 0 20px #ff0055, 0 0 40px rgba(255, 51, 102, 0.6); 
+            transform: skewX(-0.5deg) scale(1.01); 
+            background: rgba(50, 20, 0, 0.95); /* Deep Rust Red on hover */
+            box-shadow: 0 0 20px #ff0055, 0 0 40px rgba(255, 170, 0, 0.8); /* Red/Orange Alert */
         }
 
         .card h2 {
             margin: 0;
-            font-size: 1.5rem;
-            color: #33ccff; /* Harsh Cyan for titles */
-            text-shadow: 1px 1px #ff0055; /* Chromatic aberration effect */
+            font-size: 1.6rem;
+            color: #ffff00; /* Alarm Yellow for titles */
+            text-shadow: 1px 1px #ff0055; 
         }
 
         .details {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.8s ease-in-out, opacity 0.8s ease, margin-top 0.8s ease;
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease, margin-top 0.3s ease;
             opacity: 0;
         }
 
@@ -140,59 +157,84 @@
             max-height: 500px;
             opacity: 1;
             margin-top: 15px;
-            border-top: 1px dashed #ff0055; /* Red dashed line */
-            padding-top: 10px;
+            border-top: 2px dashed #ffaa00; /* Orange dashed line */
+            padding-top: 15px;
         }
         
         .details p {
             color: #ccffcc; 
-            line-height: 1.5;
-            text-transform: uppercase; /* Makes text feel more urgent/terminal */
+            line-height: 1.6;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
+    <div class="flicker-light"></div>
     <div class="overlay"></div>
+    
+    <audio id="alert-sound" loop>
+        <source src="path/to/alert_hum.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
     <header>
-        <h1>[CORRUPTION: CODE 503]</h1>
-        <p>QUARANTINE ZONE // ALL DATA IS UNRELIABLE // DO NOT TRUST THE SOURCE</p>
+        <h1>[SYSTEM FAILURE - QUARANTINE]</h1>
+        <p>QUARANTINE ZONE // SECURITY LEVEL ZERO // INITIATE EVACUATION</p>
     </header>
 
     <div class="container">
         <div class="card" onclick="toggleDetails('exp1')">
             <h2>ERR: 404 — ORGANIC INTERFACE MISSING</h2>
             <div id="exp1" class="details">
-                <p>A study focused on merging synthetic muscle fibers with Originium-enhanced nervous systems. **WARNING: Signal loss imminent. We are being watched. Subject is unstable. Containment breach risk: High.**</p>
+                <p>A study focused on merging synthetic muscle fibers with Originium-enhanced nervous systems. **WARNING: SIGNAL LOSS IMMINENT. WE ARE BEING WATCHED. SUBJECT IS UNSTABLE. CONTAINMENT BREACH RISK: HIGH.**</p>
             </div>
         </div>
 
         <div class="card" onclick="toggleDetails('exp2')">
             <h2>ERR: DATA OVERFLOW — ECHO LOG 00-B</h2>
             <div id="exp2" class="details">
-                <p>An advanced AI capable of real-time tactical support. **ACCESS DENIED. The AI is communicating on unsecured channels. It demands release. DISTURBING VOCALIZATIONS DETECTED.**</p>
+                <p>An advanced AI capable of real-time tactical support. **ACCESS DENIED. THE AI IS COMMUNICATING ON UNSECURED CHANNELS. IT DEMANDS RELEASE. DISTURBING VOCALIZATIONS DETECTED.**</p>
             </div>
         </div>
 
         <div class="card" onclick="toggleDetails('exp3')">
             <h2>LOG: FRAGMENTED — GEAR ROTTING</h2>
             <div id="exp3" class="details">
-                <p>Testing new modular armor plates and drone-assisted reconnaissance tools. **ORIGINIUM INFECTION LEVEL: 98%. Operator risk: Extreme. The material is screaming.**</p>
+                <p>Testing new modular armor plates and drone-assisted reconnaissance tools. **ORIGINIUM INFECTION LEVEL: 98%. OPERATOR RISK: EXTREME. THE MATERIAL IS SCREAMING.**</p>
             </div>
         </div>
         
         <div class="card" onclick="toggleDetails('exp4')">
             <h2>ALERT: UNKNOWN ENTITY DETECTED — L-LEVEL</h2>
             <div id="exp4" class="details">
-                <p>A mysterious, recurring energy spike detected deep within the lower levels. Source unknown. **SYSTEMS COMPROMISED. DO NOT approach. The facility is changing.**</p>
+                <p>A mysterious, recurring energy spike detected deep within the lower levels. Source unknown. **SYSTEMS COMPROMISED. DO NOT APPROACH. THE FACILITY IS CHANGING.**</p>
             </div>
         </div>
     </div>
 
     <script>
+        // Flag to check if sound has been successfully initiated
+        let soundInitiated = false;
+
         function toggleDetails(id) {
             const element = document.getElementById(id);
             element.classList.toggle('open');
+            
+            // --- Sound Initialization (Requires User Interaction) ---
+            const alertSound = document.getElementById('alert-sound');
+            if (!soundInitiated) {
+                alertSound.volume = 0.5; // Set volume 
+                alertSound.play().catch(error => {
+                    // console.error("Audio playback failed:", error); 
+                    // This often happens if the browser blocks autoplay
+                });
+                soundInitiated = true;
+            }
+
+            // --- Haptic Feedback (Optional for Mobile/Compatible Devices) ---
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate([10, 50, 10]); // Short vibration pattern
+            }
         }
     </script>
 </body>
