@@ -68,7 +68,28 @@
 
   </style>
 </head>
+<style>
+  /* Extra Creepy Lab Effects */
+  .lab-flicker{position:fixed;inset:0;background:rgba(255,255,255,0.03);mix-blend-mode:overlay;pointer-events:none;animation:labFlicker 12s infinite;z-index:5}
+  @keyframes labFlicker{0%,100%{opacity:0} 5%{opacity:0.12} 7%{opacity:0} 9%{opacity:0.18} 10%{opacity:0} 25%{opacity:0.05} 27%{opacity:0} 60%{opacity:0.1} 62%{opacity:0} 80%{opacity:0.07}}
+
+  .blood-spray{position:fixed;inset:0;pointer-events:none;z-index:4;background:url('https://i.imgur.com/WTl8Q67.png') center/cover repeat;opacity:0.08;mix-blend-mode:multiply}
+
+  .shadow-crawler{position:fixed;width:160px;height:160px;background:url('https://i.imgur.com/PxLRYyv.png') center/contain no-repeat;filter:brightness(0.3) blur(2px);opacity:0.08;z-index:6;pointer-events:none;animation:crawl 18s infinite linear}
+  @keyframes crawl{0%{transform:translate(-20%,120%);} 50%{opacity:0.18;} 100%{transform:translate(120%,-20%);opacity:0.05;}}
+
+  .monitor-scan{position:fixed;left:0;top:0;height:4px;width:100%;background:rgba(0,255,150,0.14);filter:blur(2px);animation:scanline 4s infinite linear;z-index:7;pointer-events:none}
+  @keyframes scanline{0%{top:-4px;}100%{top:100%;}}
+
+  .distort{position:fixed;inset:0;pointer-events:none;z-index:8;backdrop-filter:blur(0px);animation:distortAnim 7s infinite ease-in-out}
+  @keyframes distortAnim{0%{backdrop-filter:blur(0px);}15%{backdrop-filter:blur(1.6px);}30%{backdrop-filter:blur(0);}50%{backdrop-filter:blur(2.6px);}70%{backdrop-filter:blur(0);}90%{backdrop-filter:blur(1px);}100%{backdrop-filter:blur(0);}}
+</style>
 <body>
+<div class="lab-flicker"></div>
+<div class="blood-spray"></div>
+<div class="shadow-crawler"></div>
+<div class="monitor-scan"></div>
+<div class="distort"></div>
   <div class="stage">
     <h1 class="glitch" data-text="They're Watching">They're Watching</h1>
     <p class="lead">The page feels alive — look around. Eyes follow. Shadows breathe. If you stay too long they will notice.</p>
