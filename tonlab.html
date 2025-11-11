@@ -1,331 +1,133 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>They Are Watching — Horror Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to My Laboratory</title>
   <style>
-    :root{
-      --bg:#060406;
-      --red:#8b0000;
-      --muted:#b6b6b6;
-    }
-    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
-    body{
-      background: radial-gradient(ellipse at 20% 10%, rgba(100,0,0,0.06) 0%, transparent 20%),
-                  radial-gradient(ellipse at 90% 90%, rgba(50,0,0,0.03) 0%, transparent 15%),
-                  var(--bg);
-      color:#ddd;overflow:hidden;
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: #0a0d12 url('https://raw.githubusercontent.com/lightragon/imageshost/main/rhodes_dark_bg.jpg') no-repeat center/cover;
+      color: #d0e7ff;
+      overflow-x: hidden;
     }
 
-    /* Main stage */
-    .stage{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+    }
 
-    h1{font-size:clamp(36px,7vw,96px);letter-spacing:0.06em;margin:0 0 10px;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.8));}
-    p.lead{max-width:760px;padding:0 20px;font-size:18px;color:var(--muted);}
+    header {
+      text-align: center;
+      padding: 100px 20px 40px;
+      animation: fadeIn 2s ease;
+    }
 
-    /* Glitchy title */
-    .glitch{position:relative;display:inline-block}
-    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;}
-    .glitch::before{clip-path:polygon(0 2%,100% 0,100% 33%,0 33%);transform:translate(4px,-2px);opacity:0.7;color:#fff;text-shadow:-2px 0 var(--red)}
-    .glitch::after{clip-path:polygon(0 66%,100% 65%,100% 100%,0 100%);transform:translate(-6px,2px);opacity:0.8;color:#fff;text-shadow:2px 0 rgba(0,200,255,0.08)}
-    @keyframes glitchFlicker{0%{opacity:1}25%{opacity:.85}50%{opacity:.95}75%{opacity:.7}100%{opacity:1}}
-    .glitch{animation:glitchFlicker 3.5s infinite;}
+    header h1 {
+      font-size: 3.5rem;
+      letter-spacing: 3px;
+      color: #7fcbff;
+      text-shadow: 0 0 20px rgba(127, 203, 255, 0.8);
+      margin-bottom: 10px;
+    }
 
-    /* Eyes following cursor */
-    .eye-field{position:absolute;inset:0;pointer-events:none}
-    .eye{position:absolute;width:56px;height:56px;border-radius:50%;background:#111;border:2px solid rgba(255,255,255,0.04);box-shadow:inset -3px -3px 10px rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center}
-    .pupil{width:18px;height:18px;border-radius:50%;background:var(--red);box-shadow:0 0 18px rgba(139,0,0,.9)}
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.8;
+    }
 
-    /* Blood drips */
-    .blood-layer{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
-    .drip{position:absolute;left:10%;top:-10%;width:80px;height:220px;border-radius:40% 40% 50% 50%/35% 35% 65% 65%;background:linear-gradient(180deg,rgba(139,0,0,0.95) 0%, rgba(80,0,0,0.9) 40%, rgba(40,0,0,0.85) 100%);transform:rotate(-8deg);opacity:0.9;animation:drip 6s infinite}
-    .drip:nth-child(2){left:65%;top:-15%;width:60px;height:160px;animation-delay:2s;transform:rotate(6deg)}
-    .drip:nth-child(3){left:44%;top:-22%;width:48px;height:120px;animation-delay:4s;transform:rotate(-3deg)}
-    @keyframes drip{0%{transform:translateY(-10%) scaleY(.9)}40%{transform:translateY(60%) scaleY(1.05)}80%{transform:translateY(120%) scaleY(1)}100%{transform:translateY(120%) scaleY(1)}}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-    /* Floating particles */
-    .dust{position:absolute;inset:0;pointer-events:none}
-    .speck{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.04);box-shadow:0 0 12px rgba(255,0,0,0.03);animation:float linear infinite}
-    @keyframes float{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(-120vh) rotate(360deg)}}
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 40px auto;
+    }
 
-    /* Cursor glow & trail */
-    .cursor-glow{position:fixed;left:0;top:0;width:24px;height:24px;border-radius:50%;pointer-events:none;mix-blend-mode:screen;transform:translate(-50%,-50%);transition:width .12s,height .12s}
+    .card {
+      background: rgba(15, 20, 25, 0.8);
+      border-left: 4px solid #68b6ff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
 
-    /* Footer controls */
-    .controls{position:fixed;right:14px;bottom:14px;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);padding:10px;border-radius:10px;color:var(--muted);font-size:13px}
-    .controls label{display:flex;gap:8px;align-items:center}
-    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:8px;color:#fff;cursor:pointer;margin-left:8px}
+    .card:hover {
+      transform: scale(1.02);
+      background: rgba(20, 30, 40, 0.9);
+    }
 
-    /* Jump-scare overlay */
-    .jumpscare{position:fixed;inset:0;background:radial-gradient(circle at 50% 40%, rgba(255,0,0,0.12), rgba(0,0,0,0.9) 50%);display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:opacity .28s;z-index:999}
-    .jumpscare.active{visibility:visible;opacity:1;animation:shake .9s ease-in-out}
-    .jumpscare h2{font-size:clamp(40px,8vw,120px);color:#fff;letter-spacing:0.2em;text-transform:uppercase;text-shadow:0 6px 30px rgba(0,0,0,0.9)}
-    @keyframes shake{0%{transform:translate(0)}10%{transform:translate(-6px,-6px)}20%{transform:translate(6px,6px)}30%{transform:translate(-6px,6px)}40%{transform:translate(6px,-6px)}100%{transform:translate(0)}}
+    .card h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #9ad4ff;
+    }
 
-    /* Accessibility: reduce motion */
-    @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+      opacity: 0;
+    }
 
+    .details.open {
+      max-height: 500px;
+      opacity: 1;
+      margin-top: 10px;
+    }
   </style>
 </head>
-<style>
-  /* Extra Creepy Lab Effects */
-  .lab-flicker{position:fixed;inset:0;background:rgba(255,255,255,0.03);mix-blend-mode:overlay;pointer-events:none;animation:labFlicker 12s infinite;z-index:5}
-  @keyframes labFlicker{0%,100%{opacity:0} 5%{opacity:0.12} 7%{opacity:0} 9%{opacity:0.18} 10%{opacity:0} 25%{opacity:0.05} 27%{opacity:0} 60%{opacity:0.1} 62%{opacity:0} 80%{opacity:0.07}}
+<body>
+  <div class="overlay"></div>
 
-  .blood-spray{position:fixed;inset:0;pointer-events:none;z-index:4;background:url('https://i.imgur.com/WTl8Q67.png') center/cover repeat;opacity:0.08;mix-blend-mode:multiply}
+  <header>
+    <h1>Welcome to My Laboratory</h1>
+    <p>This is the area where you will witness upcoming experiments and classified research from Rhodes Island.</p>
+  </header>
 
-  .shadow-crawler{position:fixed;width:160px;height:160px;background:url('https://i.imgur.com/PxLRYyv.png') center/contain no-repeat;filter:brightness(0.3) blur(2px);opacity:0.08;z-index:6;pointer-events:none;animation:crawl 18s infinite linear}
-  @keyframes crawl{0%{transform:translate(-20%,120%);} 50%{opacity:0.18;} 100%{transform:translate(120%,-20%);opacity:0.05;}}
+  <div class="container">
+    <div class="card" onclick="toggleDetails('exp1')">
+      <h2>Experiment Alpha — Bio-Mechanical Fusion</h2>
+      <div id="exp1" class="details">
+        <p>A study focused on merging synthetic muscle fibers with Originium-enhanced nervous systems.</p>
+      </div>
+    </div>
 
-  .monitor-scan{position:fixed;left:0;top:0;height:4px;width:100%;background:rgba(0,255,150,0.14);filter:blur(2px);animation:scanline 4s infinite linear;z-index:7;pointer-events:none}
-  @keyframes scanline{0%{top:-4px;}100%{top:100%;}}
+    <div class="card" onclick="toggleDetails('exp2')">
+      <h2>Experiment Beta — Neuro-link AI Assistant</h2>
+      <div id="exp2" class="details">
+        <p>An advanced AI capable of real-time tactical support and situational awareness monitoring.</p>
+      </div>
+    </div>
 
-  .distort{position:fixed;inset:0;pointer-events:none;z-index:8;backdrop-filter:blur(0px);animation:distortAnim 7s infinite ease-in-out}
-  @keyframes distortAnim{0%{backdrop-filter:blur(0px);}15%{backdrop-filter:blur(1.6px);}30%{backdrop-filter:blur(0);}50%{backdrop-filter:blur(2.6px);}70%{backdrop-filter:blur(0);}90%{backdrop-filter:blur(1px);}100%{backdrop-filter:blur(0);}}
-</style>
-<body class="bg-white text-gray-800 min-h-screen p-6">
-    <header class="text-center mb-10">
-        <h1 class="text-5xl font-bold tracking-widest text-gray-900 drop-shadow-[0_0_10px_#ffffff]">
-            Welcome to my Lab
-        </h1>
-        <p class="mt-4 text-lg text-gray-600 italic opacity-90">
-            this the area you will saw a lot of stuff I will describe the future upcoming experiment of the laboratory of mine
-        </p>
-    </header>
-    <header class="text-center mb-10">
-        <h1 class="text-5xl font-bold tracking-widest text-red-700 drop-shadow-[0_0_10px_#7f0000]">
-            Welcome to my Lab
-        </h1>
-        <p class="mt-4 text-lg text-red-500 italic opacity-80">
-            this the area you will saw a lot of stuff I will describe the future upcoming experiment of the laboratory of mine
-        </p>
-    </header>
-<div class="lab-flicker"></div>
-<div class="blood-spray"></div>
-<div class="shadow-crawler"></div>
-<div class="monitor-scan"></div>
-<div class="distort"></div>
-  <div class="stage">
-    <h1 class="glitch" data-text="They're Watching">They're Watching</h1>
-    <p class="lead">The page feels alive — look around. Eyes follow. Shadows breathe. If you stay too long they will notice.</p>
-  </div>
-
-  <div class="eye-field" aria-hidden="true">
-    <!-- scattered eyes -- we'll position via JS -->
-  </div>
-  <div class="blood-layer" aria-hidden="true">
-    <div class="drip"></div>
-    <div class="drip"></div>
-    <div class="drip"></div>
-  </div>
-  <div class="dust" aria-hidden="true"></div>
-  <div class="cursor-glow" id="cursorGlow"></div>
-
-  <div class="jumpscare" id="jumpscare" role="dialog" aria-hidden="true">
-    <h2>WATCHING YOU</h2>
-  </div>
-
-  <div class="controls" aria-hidden="false">
-    <label><input type="checkbox" id="enableEyes" checked> Eyes follow cursor</label>
-    <label><input type="checkbox" id="enableJumpscare" checked> Enable jump-scare</label>
-    <button class="btn" id="silenceBtn">Silence (disable sound)</button>
+    <div class="card" onclick="toggleDetails('exp3')">
+      <h2>Experiment Delta — Rhodes Island Field Equipment Upgrade</h2>
+      <div id="exp3" class="details">
+        <p>Testing new modular armor plates and drone-assisted reconnaissance tools.</p>
+      </div>
+    </div>
   </div>
 
   <script>
-    // --- Helpers ---
-    const eyeField = document.querySelector('.eye-field');
-    const dust = document.querySelector('.dust');
-    const cursorGlow = document.getElementById('cursorGlow');
-    const jumpscare = document.getElementById('jumpscare');
-    const enableEyes = document.getElementById('enableEyes');
-    const enableJumpscare = document.getElementById('enableJumpscare');
-    const silenceBtn = document.getElementById('silenceBtn');
-
-    // create many eyes placed pseudo-randomly
-    const eyes = [];
-    function placeEyes(count=20){
-      const w=window.innerWidth, h=window.innerHeight;
-      for(let i=0;i<count;i++){
-        const el = document.createElement('div');
-        el.className='eye';
-        const pupil = document.createElement('div');pupil.className='pupil';el.appendChild(pupil);
-        // random position concentrated near edges/corners
-        const t = Math.random();
-        const side = Math.floor(Math.random()*4);
-        let x,y;
-        if(side===0){ x = Math.random()*w*0.25; y = Math.random()*h; }
-        else if(side===1){ x = Math.random()*w*0.25 + w*0.75; y = Math.random()*h; }
-        else if(side===2){ x = Math.random()*w; y = Math.random()*h*0.2; }
-        else { x = Math.random()*w; y = Math.random()*h*0.2 + h*0.8; }
-        el.style.left = (x - 28) + 'px';
-        el.style.top = (y - 28) + 'px';
-        eyeField.appendChild(el);
-        eyes.push({el,pupil,x,y});
-      }
+    function toggleDetails(id) {
+      const element = document.getElementById(id);
+      element.classList.toggle('open');
     }
-    placeEyes(28);
-
-    // create drifting specks
-    function placeSpecks(n=30){
-      for(let i=0;i<n;i++){
-        const s = document.createElement('div');s.className='speck';
-        const left = Math.random()*100;
-        const size = 4 + Math.random()*8;
-        s.style.left = left + 'vw';
-        s.style.bottom = (-10 - Math.random()*40) + 'vh';
-        s.style.width = size + 'px'; s.style.height = size + 'px';
-        s.style.opacity = 0.03 + Math.random()*0.06;
-        s.style.animationDuration = (15 + Math.random()*30) + 's';
-        s.style.animationDelay = (-Math.random()*20) + 's';
-        dust.appendChild(s);
-      }
-    }
-    placeSpecks(28);
-
-    // pupils follow pointer
-    let lastPointer = {x:window.innerWidth/2,y:window.innerHeight/2};
-    window.addEventListener('pointermove', (e)=>{
-      lastPointer = {x:e.clientX,y:e.clientY};
-      cursorGlow.style.left = e.clientX+'px';cursorGlow.style.top = e.clientY+'px';
-      cursorGlow.style.width = '40px';cursorGlow.style.height = '40px';
-      setTimeout(()=>{cursorGlow.style.width='24px';cursorGlow.style.height='24px';},120);
-    });
-
-    function updateEyes(){
-      if(!enableEyes.checked) return;
-      for(const e of eyes){
-        const dx = lastPointer.x - e.x; const dy = lastPointer.y - e.y;
-        const ang = Math.atan2(dy,dx);
-        const px = Math.cos(ang)*8; const py = Math.sin(ang)*6;
-        e.pupil.style.transform = `translate(${px}px,${py}px)`;
-      }
-    }
-    setInterval(updateEyes,40);
-
-    // Jump-scare logic: if user lingers too long in center or clicks repeatedly
-    let lingerTimer=null; let interactionCount=0;
-    function startLingerCheck(){
-      clearTimeout(lingerTimer);
-      lingerTimer = setTimeout(()=>{
-        // show jumpscare
-        triggerJumpscare();
-      },12000); // 12 seconds without moving
-    }
-    // on any pointer move restart timer
-    window.addEventListener('pointermove', ()=>{ if(enableJumpscare.checked) startLingerCheck(); interactionCount=0; });
-    window.addEventListener('click', ()=>{ interactionCount++; if(interactionCount>6 && enableJumpscare.checked) triggerJumpscare(); });
-    startLingerCheck();
-
-    // WebAudio noise generator for jump-scare
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null; let noiseNode=null; let gainNode=null;
-    function ensureAudio(){
-      if(!AudioContext) return;
-      if(!audioCtx){ audioCtx = new AudioContext(); }
-    }
-    function playScream(){
-      if(!audioCtx) return;
-      // short burst of noise + oscillator
-      const bufferSize = audioCtx.sampleRate * 0.5; // 0.5s
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for(let i=0;i<bufferSize;i++){ data[i] = (Math.random()*2-1) * (1 - i/bufferSize); }
-      const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
-      const g = audioCtx.createGain(); g.gain.value = 0.0;
-      noise.connect(g);
-      const osc = audioCtx.createOscillator(); osc.type='sawtooth'; osc.frequency.value = 220;
-      const og = audioCtx.createGain(); og.gain.value = 0.0;
-      osc.connect(og);
-      g.connect(audioCtx.destination); og.connect(audioCtx.destination);
-      const now = audioCtx.currentTime;
-      g.gain.linearRampToValueAtTime(1.0, now + 0.02);
-      g.gain.linearRampToValueAtTime(0.0, now + 0.5);
-      og.gain.linearRampToValueAtTime(0.6, now + 0.02);
-      og.gain.linearRampToValueAtTime(0.0, now + 0.45);
-      noise.start(now); noise.stop(now + 0.55);
-      osc.start(now); osc.frequency.exponentialRampToValueAtTime(60, now + 0.45); osc.stop(now + 0.55);
-    }
-
-    // show jumpscare UI
-    function triggerJumpscare(){
-      if(!enableJumpscare.checked) return;
-      jumpscare.classList.add('active');
-      jumpscare.setAttribute('aria-hidden','false');
-      if(audioAllowed) playScream();
-      setTimeout(()=>{ jumpscare.classList.remove('active'); jumpscare.setAttribute('aria-hidden','true'); },900);
-    }
-
-    // audio permission / user gesture handling
-    let audioAllowed = true;
-    silenceBtn.addEventListener('click', ()=>{ audioAllowed=false; silenceBtn.textContent='Sound disabled'; });
-
-    // allow audio setup on first gesture
-    function wakeAudio(){ ensureAudio(); window.removeEventListener('pointerdown',wakeAudio); }
-    window.addEventListener('pointerdown', wakeAudio);
-
-    // accessibility: allow keyboard to dismiss
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ jumpscare.classList.remove('active'); } });
-
-    // defensive: if prefers-reduced-motion, turn off jumpscare
-    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ enableJumpscare.checked=false; enableEyes.checked=false; }
-
-    // small initial flicker animation
-    (function flick(){
-      document.body.animate([{filter:'brightness(.9)'},{filter:'brightness(1.06)'},{filter:'brightness(.85)'},{filter:'brightness(1)'}],{duration:4200,iterations:1});
-    })();
-
-    // warn user about content (optional): overlay on first view
-    if(!localStorage.getItem('horror_ack')){
-      const consent = confirm('This page contains unsettling imagery and sound. Continue? (Press Cancel to disable effects)');
-      if(!consent){ enableEyes.checked=false; enableJumpscare.checked=false; audioAllowed=false; }
-      localStorage.setItem('horror_ack','1');
-    }
-
-    // resize handler for eyes
-    window.addEventListener('resize', ()=>{
-      let i=0; for(const e of eyes){ const rect=e.el.getBoundingClientRect(); e.x = rect.left + rect.width/2; e.y = rect.top + rect.height/2; i++; }
-    });
-
-    // initialize positions (after layout)
-    setTimeout(()=>{ window.dispatchEvent(new Event('resize')); },200);
-
   </script>
-  <!-- Laboratory Theme Elements -->
-  <div class="lab-overlays">
-    <div class="lab-grid"></div>
-    <div class="lab-scan"></div>
-  </div>
-
-  <!-- Template Tables Section -->
-  <section class="templates" style="position:relative;z-index:50;padding:40px;color:#eee;max-width:900px;margin:auto;">
-    <h2 style="text-align:center;margin-bottom:20px;">Horror Lab Templates</h2>
-
-    <h3>Experiment Log Template</h3>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:30px;">
-      <tr><th style="border:1px solid #444;padding:8px;background:#1a1a1a;">Field</th><th style="border:1px solid #444;padding:8px;background:#1a1a1a;">Details</th></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Subject ID</td><td style="border:1px solid #444;padding:8px;">[Enter ID]</td></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Mutation Stage</td><td style="border:1px solid #444;padding:8px;">[Stage]</td></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Symptoms</td><td style="border:1px solid #444;padding:8px;">[List symptoms]</td></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Last Known Behavior</td><td style="border:1px solid #444;padding:8px;">[Notes]</td></tr>
-    </table>
-
-    <h3>Warning / Containment Table</h3>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:30px;">
-      <tr><th style="border:1px solid #444;padding:8px;background:#330000;">Threat</th><th style="border:1px solid #444;padding:8px;background:#330000;">Risk Level</th><th style="border:1px solid #444;padding:8px;background:#330000;">Notes</th></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Biohazard Class</td><td style="border:1px solid #444;padding:8px;">[Class]</td><td style="border:1px solid #444;padding:8px;">[Explanation]</td></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Containment Required</td><td style="border:1px solid #444;padding:8px;">[Level]</td><td style="border:1px solid #444;padding:8px;">[Rules]</td></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Last Breach</td><td style="border:1px solid #444;padding:8px;">[Time]</td><td style="border:1px solid #444;padding:8px;">[Summary]</td></tr>
-    </table>
-
-    <h3>Research Notes Template</h3>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:30px;">
-      <tr><th style="border:1px solid #444;padding:8px;background:#002233;">Parameter</th><th style="border:1px solid #444;padding:8px;background:#002233;">Observation</th></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Chemical Used</td><td style="border:1px solid #444;padding:8px;">[Name]</td></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Reaction</td><td style="border:1px solid #444;padding:8px;">[Result]</td></tr>
-      <tr><td style="border:1px solid #444;padding:8px;">Side Effects</td><td style="border:1px solid #444;padding:8px;">[Notes]</td></tr>
-    </table>
-  </section>
-
 </body>
 </html>
