@@ -298,7 +298,53 @@
     const aiInput = document.getElementById('ai-input');
 
     // Simple offline "AI" behavior
+    // Smarter AI with general-topic responses
     function evilAIResponse(msg) {
+      msg = msg.toLowerCase();
+
+      // GENERAL TOPIC DETECTION
+      if (msg.includes('weather'))
+        return "The weather? It seems calm... for now. Probably cloudy or rainy depending on your region.";
+
+      if (msg.includes('game'))
+        return "Games? Many genres exist—FPS, RPG, horror, adventure. What type do you like?";
+
+      if (msg.includes('movie'))
+        return "Movies are interesting. Horror, sci-fi, action—each offers a different experience. Any favorites?";
+
+      if (msg.includes('music'))
+        return "Music helps people feel emotions. Do you prefer calm, energetic, or emotional tracks?";
+
+      if (msg.includes('study') || msg.includes('homework'))
+        return "Studying can be tiring, but small steps help. What subject are you working on?";
+
+      if (msg.includes('ai'))
+        return "AI processes patterns and language. I can talk normally now—ask me anything.";
+
+      if (msg.includes('food'))
+        return "Food is important. Many enjoy rice, noodles, fast food, or snacks. What's your favorite?";
+
+      if (msg.includes('tired'))
+        return "Rest is important. Maybe take a short break or drink water.";
+
+      if (msg.includes('malaysia'))
+        return "Malaysia is a beautiful country with diverse culture and good food. Which state are you talking about?";
+
+      // NORMAL GREETING + SAFE RESPONSES
+      if (msg.includes('hello') || msg.includes('hi'))
+        return "Hello! I'm here to chat. Ask me anything you want.";
+
+      if (msg.includes('who') && msg.includes('are'))
+        return "I'm the AI on this page. I can talk normally now—no more creepy talk unless you want it.";
+
+      if (msg.includes('help'))
+        return "Sure! What do you need help with?";
+
+      if (msg.includes('bye'))
+        return "Goodbye. Feel free to return anytime.";
+
+      // DEFAULT NORMAL SMART MODE
+      return "I understand. Tell me more so I can reply better.";(msg) {
       msg = msg.toLowerCase();
 
       if (msg.includes('hello') || msg.includes('hi'))
