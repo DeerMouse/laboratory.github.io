@@ -1,384 +1,258 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example HTML Page</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>They Are Watching — Horror Demo</title>
   <style>
-    body {
-      font-family: "Courier New", monospace;
-      margin: 0;
-      padding: 20px;
-      background: #020202;
-      color: #b20000;
-      overflow-x: hidden;
-      cursor: none;
+    :root{
+      --bg:#060406;
+      --red:#8b0000;
+      --muted:#b6b6b6;
+    }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+    body{
+      background: radial-gradient(ellipse at 20% 10%, rgba(100,0,0,0.06) 0%, transparent 20%),
+                  radial-gradient(ellipse at 90% 90%, rgba(50,0,0,0.03) 0%, transparent 15%),
+                  var(--bg);
+      color:#ddd;overflow:hidden;
     }
 
-    /* Flicker effect */
-    @keyframes flicker {
-      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
-      20%, 24%, 55% { opacity: 0.4; }
-    }
+    /* Main stage */
+    .stage{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
 
-    header {
-      background: #0a0a0a;
-      color: #ff0000;
-      padding: 40px 20px;
-      text-align: center;
-      border-radius: 10px;
-      animation: flicker 3s infinite;
-      box-shadow: 0 0 25px #400000;
-    }
+    h1{font-size:clamp(36px,7vw,96px);letter-spacing:0.06em;margin:0 0 10px;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.8));}
+    p.lead{max-width:760px;padding:0 20px;font-size:18px;color:var(--muted);}
 
-    .card {
-      background: #0a0a0a;
-      padding: 25px;
-      margin-top: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px #300000;
-      position: relative;
-      overflow: hidden;
-      animation: flicker 4s infinite;
-    }
+    /* Glitchy title */
+    .glitch{position:relative;display:inline-block}
+    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;}
+    .glitch::before{clip-path:polygon(0 2%,100% 0,100% 33%,0 33%);transform:translate(4px,-2px);opacity:0.7;color:#fff;text-shadow:-2px 0 var(--red)}
+    .glitch::after{clip-path:polygon(0 66%,100% 65%,100% 100%,0 100%);transform:translate(-6px,2px);opacity:0.8;color:#fff;text-shadow:2px 0 rgba(0,200,255,0.08)}
+    @keyframes glitchFlicker{0%{opacity:1}25%{opacity:.85}50%{opacity:.95}75%{opacity:.7}100%{opacity:1}}
+    .glitch{animation:glitchFlicker 3.5s infinite;}
 
-    h1, h2 {
-      color: #ff1a1a;
-      text-shadow: 0 0 5px #800000;
-    }
+    /* Eyes following cursor */
+    .eye-field{position:absolute;inset:0;pointer-events:none}
+    .eye{position:absolute;width:56px;height:56px;border-radius:50%;background:#111;border:2px solid rgba(255,255,255,0.04);box-shadow:inset -3px -3px 10px rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center}
+    .pupil{width:18px;height:18px;border-radius:50%;background:var(--red);box-shadow:0 0 18px rgba(139,0,0,.9)}
 
-    ul li {
-      margin: 8px 0;
-    }
+    /* Blood drips */
+    .blood-layer{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
+    .drip{position:absolute;left:10%;top:-10%;width:80px;height:220px;border-radius:40% 40% 50% 50%/35% 35% 65% 65%;background:linear-gradient(180deg,rgba(139,0,0,0.95) 0%, rgba(80,0,0,0.9) 40%, rgba(40,0,0,0.85) 100%);transform:rotate(-8deg);opacity:0.9;animation:drip 6s infinite}
+    .drip:nth-child(2){left:65%;top:-15%;width:60px;height:160px;animation-delay:2s;transform:rotate(6deg)}
+    .drip:nth-child(3){left:44%;top:-22%;width:48px;height:120px;animation-delay:4s;transform:rotate(-3deg)}
+    @keyframes drip{0%{transform:translateY(-10%) scaleY(.9)}40%{transform:translateY(60%) scaleY(1.05)}80%{transform:translateY(120%) scaleY(1)}100%{transform:translateY(120%) scaleY(1)}}
 
-    footer {
-      margin-top: 40px;
-      text-align: center;
-      color: #550000;
-      animation: flicker 6s infinite;
-    }
+    /* Floating particles */
+    .dust{position:absolute;inset:0;pointer-events:none}
+    .speck{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.04);box-shadow:0 0 12px rgba(255,0,0,0.03);animation:float linear infinite}
+    @keyframes float{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(-120vh) rotate(360deg)}}
 
-    /* Glowing cursed cursor */
-    .cursedCursor {
-      position: fixed;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: rgba(255,0,0,0.6);
-      box-shadow: 0 0 25px rgba(255,0,0,0.9);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 99999;
-    }
+    /* Cursor glow & trail */
+    .cursor-glow{position:fixed;left:0;top:0;width:24px;height:24px;border-radius:50%;pointer-events:none;mix-blend-mode:screen;transform:translate(-50%,-50%);transition:width .12s,height .12s}
 
-    /* Creepy rat replaced with haunted shadow creature */
-    @keyframes shadowWalk {
-      0% { left: -120px; filter: blur(3px); opacity: 0.4; }
-      45% { left: calc(100% + 120px); opacity: 0.6; }
-      50% { transform: scaleX(-1); }
-      100% { left: -120px; opacity: 0.4; }
-    }
+    /* Footer controls */
+    .controls{position:fixed;right:14px;bottom:14px;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);padding:10px;border-radius:10px;color:var(--muted);font-size:13px}
+    .controls label{display:flex;gap:8px;align-items:center}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:8px;color:#fff;cursor:pointer;margin-left:8px}
 
-    .shadow-creature {
-      position: fixed;
-      bottom: 10px;
-      left: -120px;
-      width: 110px;
-      height: 70px;
-      background-image: url('https://i.imgur.com/FZk0lUG.png'); /* spooky silhouette */
-      background-size: contain;
-      background-repeat: no-repeat;
-      animation: shadowWalk 12s linear infinite;
-      z-index: 9999;
-      filter: grayscale(100%) brightness(0.5);
-    }
+    /* Jump-scare overlay */
+    .jumpscare{position:fixed;inset:0;background:radial-gradient(circle at 50% 40%, rgba(255,0,0,0.12), rgba(0,0,0,0.9) 50%);display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:opacity .28s;z-index:999}
+    .jumpscare.active{visibility:visible;opacity:1;animation:shake .9s ease-in-out}
+    .jumpscare h2{font-size:clamp(40px,8vw,120px);color:#fff;letter-spacing:0.2em;text-transform:uppercase;text-shadow:0 6px 30px rgba(0,0,0,0.9)}
+    @keyframes shake{0%{transform:translate(0)}10%{transform:translate(-6px,-6px)}20%{transform:translate(6px,6px)}30%{transform:translate(-6px,6px)}40%{transform:translate(6px,-6px)}100%{transform:translate(0)}}
+
+    /* Accessibility: reduce motion */
+    @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 
   </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to My Example Page</h1>
-  </header>
-
-  <div class="card">
-    <h2>About This Page</h2>
-    <p>This is a simple example HTML page with basic styling. You can modify it to learn the fundamentals of HTML and CSS.</p>
+  <div class="stage">
+    <h1 class="glitch" data-text="They're Watching">They're Watching</h1>
+    <p class="lead">The page feels alive — look around. Eyes follow. Shadows breathe. If you stay too long they will notice.</p>
   </div>
 
-  <div class="card">
-    <h2>Sample List</h2>
-    <ul>
-      <li>Item One</li>
-      <li>Item Two</li>
-      <li>Item Three</li>
-    </ul>
+  <div class="eye-field" aria-hidden="true">
+    <!-- scattered eyes -- we'll position via JS -->
+  </div>
+  <div class="blood-layer" aria-hidden="true">
+    <div class="drip"></div>
+    <div class="drip"></div>
+    <div class="drip"></div>
+  </div>
+  <div class="dust" aria-hidden="true"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="jumpscare" id="jumpscare" role="dialog" aria-hidden="true">
+    <h2>WATCHING YOU</h2>
   </div>
 
-  <footer>
-    <p>© 2025 Example Page</p>
-  </footer>
+  <div class="controls" aria-hidden="false">
+    <label><input type="checkbox" id="enableEyes" checked> Eyes follow cursor</label>
+    <label><input type="checkbox" id="enableJumpscare" checked> Enable jump-scare</label>
+    <button class="btn" id="silenceBtn">Silence (disable sound)</button>
+  </div>
+
   <script>
-    // Cursor glow effect
-    const cursor = document.createElement('div');
-    cursor.style.position = 'fixed';
-    cursor.style.width = '20px';
-    cursor.style.height = '20px';
-    cursor.style.borderRadius = '50%';
-    cursor.style.pointerEvents = 'none';
-    cursor.style.background = 'rgba(255,255,255,0.5)';
-    cursor.style.boxShadow = '0 0 15px rgba(255,255,255,0.8)';
-    cursor.style.transform = 'translate(-50%, -50%)';
-    cursor.style.zIndex = '9999';
-    cursor.style.transition = '0.08s linear';
-    document.body.appendChild(cursor);
+    // --- Helpers ---
+    const eyeField = document.querySelector('.eye-field');
+    const dust = document.querySelector('.dust');
+    const cursorGlow = document.getElementById('cursorGlow');
+    const jumpscare = document.getElementById('jumpscare');
+    const enableEyes = document.getElementById('enableEyes');
+    const enableJumpscare = document.getElementById('enableJumpscare');
+    const silenceBtn = document.getElementById('silenceBtn');
 
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
-    });
-
-    // Rat walking animation
-    const rat = document.createElement('div');
-    rat.style.position = 'fixed';
-    rat.style.bottom = '20px';
-    rat.style.left = '-80px';
-    rat.style.width = '60px';
-    rat.style.height = '40px';
-    rat.style.backgroundImage = "url('https://i.imgur.com/V2aQ6z7.png')";
-    rat.style.backgroundSize = 'contain';
-    rat.style.backgroundRepeat = 'no-repeat';
-    rat.style.animation = 'walkRat 15s linear infinite';
-    rat.style.zIndex = '9999';
-    document.body.appendChild(rat);
-
-    // Add CSS animation dynamically
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes walkRat {
-        0% { left: -100px; transform: scaleX(1); }
-        49% { left: calc(100% + 100px); transform: scaleX(1); }
-        50% { transform: scaleX(-1); }
-        100% { left: -100px; transform: scaleX(-1); }
+    // create many eyes placed pseudo-randomly
+    const eyes = [];
+    function placeEyes(count=20){
+      const w=window.innerWidth, h=window.innerHeight;
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className='eye';
+        const pupil = document.createElement('div');pupil.className='pupil';el.appendChild(pupil);
+        // random position concentrated near edges/corners
+        const t = Math.random();
+        const side = Math.floor(Math.random()*4);
+        let x,y;
+        if(side===0){ x = Math.random()*w*0.25; y = Math.random()*h; }
+        else if(side===1){ x = Math.random()*w*0.25 + w*0.75; y = Math.random()*h; }
+        else if(side===2){ x = Math.random()*w; y = Math.random()*h*0.2; }
+        else { x = Math.random()*w; y = Math.random()*h*0.2 + h*0.8; }
+        el.style.left = (x - 28) + 'px';
+        el.style.top = (y - 28) + 'px';
+        eyeField.appendChild(el);
+        eyes.push({el,pupil,x,y});
       }
-    `;
-    document.head.appendChild(style);
-  </script>
-  <!-- Haunted Cursor -->
-  <div id="cursor" class="cursedCursor"></div>
-
-  <!-- Shadow Creature -->
-  <div class="shadow-creature"></div>
-
-  <script>
-    // Update cursor
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
-    });
-
-    // Random whisper sounds
-    const whispers = [
-      'https://assets.mixkit.co/sfx/preview/mixkit-creepy-whispers-553.mp3',
-      'https://assets.mixkit.co/sfx/preview/mixkit-dark-evil-whispers-1713.mp3'
-    ];
-
-    function randomWhisper() {
-      const audio = new Audio(whispers[Math.floor(Math.random() * whispers.length)]);
-      audio.volume = 0.3;
-      audio.play();
     }
+    placeEyes(28);
 
-    setInterval(randomWhisper, 10000 + Math.random() * 8000);
-
-    // Random jumpscare
-    function jumpscare() {
-      const img = document.createElement('img');
-      img.src = 'https://i.imgur.com/SJ4Z0Qh.png';
-      img.style.position = 'fixed';
-      img.style.top = '0';
-      img.style.left = '0';
-      img.style.width = '100%';
-      img.style.height = '100%';
-      img.style.objectFit = 'cover';
-      img.style.zIndex = '999999';
-      img.style.animation = 'none';
-
-      document.body.appendChild(img);
-
-      const scream = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-woman-screaming-731.mp3');
-      scream.volume = 0.6;
-      scream.play();
-
-      setTimeout(() => img.remove(), 1500);
-    }
-
-    // Trigger jumpscare at random times
-    setInterval(() => {
-      if (Math.random() < 0.15) jumpscare();
-    }, 9000);
-  </script>
-  <!-- Existing haunted elements remain -->
-  <div id="cursor" class="cursedCursor"></div>
-  <div class="shadow-creature"></div>
-
-  <!-- Multiple creepy eyes following cursor -->
-  <div id="eyes-container"></div>
-
-  <script>
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
-    });
-
-    // Create many eyes
-    const eyesContainer = document.getElementById('eyes-container');
-    const eyeCount = 20;
-
-    for (let i = 0; i < eyeCount; i++) {
-      const eye = document.createElement('div');
-      eye.classList.add('eye');
-
-      const pupil = document.createElement('div');
-      pupil.classList.add('pupil');
-
-      eye.appendChild(pupil);
-
-      eye.style.position = 'fixed';
-      eye.style.width = '40px';
-      eye.style.height = '40px';
-      eye.style.borderRadius = '50%';
-      eye.style.border = '3px solid #700000';
-      eye.style.background = '#0a0a0a';
-
-      // random position
-      eye.style.top = Math.random() * 90 + '%';
-      eye.style.left = Math.random() * 90 + '%';
-
-      pupil.style.width = '15px';
-      pupil.style.height = '15px';
-      pupil.style.borderRadius = '50%';
-      pupil.style.background = '#ff0000';
-      pupil.style.position = 'absolute';
-      pupil.style.top = '50%';
-      pupil.style.left = '50%';
-      pupil.style.transform = 'translate(-50%, -50%)';
-      pupil.style.transition = '0.1s linear';
-
-      eyesContainer.appendChild(eye);
-    }
-
-    // Make all eyes follow the cursor
-    document.addEventListener('mousemove', e => {
-      document.querySelectorAll('.eye').forEach(eye => {
-        const pupil = eye.querySelector('.pupil');
-        const rect = eye.getBoundingClientRect();
-
-        const eyeX = rect.left + rect.width / 2;
-        const eyeY = rect.top + rect.height / 2;
-
-        const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-        const moveX = Math.cos(angle) * 8;
-        const moveY = Math.sin(angle) * 8;
-
-        pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
-      });
-    });
-
-  </script>
-  <!-- AI Chatbox UI -->
-  <div id="ai-chatbox" style="position: fixed; bottom: 20px; right: 20px; width: 260px; background: #0a0a0a; border: 2px solid #550000; border-radius: 10px; padding: 10px; box-shadow: 0 0 15px #400000; z-index: 999999; color: #ff0000; font-family: 'Courier New', monospace;">
-    <div id="ai-log" style="height: 180px; overflow-y: auto; font-size: 12px; padding: 5px; border-bottom: 1px solid #550000;">AI: <i>...listening...</i></div>
-    <input id="ai-input" type="text" placeholder="Say something..." style="width: 100%; margin-top: 8px; background: #111; color: #ff4444; border: 1px solid #550000; padding: 5px; font-family: 'Courier New';" />
-  </div>
-
-  <script>
-    const aiLog = document.getElementById('ai-log');
-    const aiInput = document.getElementById('ai-input');
-
-    // Simple offline "AI" behavior
-    // Smarter AI with general-topic responses
-    function evilAIResponse(msg) {
-      msg = msg.toLowerCase();
-
-      // GENERAL TOPIC DETECTION
-      if (msg.includes('weather'))
-        return "The weather? It seems calm... for now. Probably cloudy or rainy depending on your region.";
-
-      if (msg.includes('game'))
-        return "Games? Many genres exist—FPS, RPG, horror, adventure. What type do you like?";
-
-      if (msg.includes('movie'))
-        return "Movies are interesting. Horror, sci-fi, action—each offers a different experience. Any favorites?";
-
-      if (msg.includes('music'))
-        return "Music helps people feel emotions. Do you prefer calm, energetic, or emotional tracks?";
-
-      if (msg.includes('study') || msg.includes('homework'))
-        return "Studying can be tiring, but small steps help. What subject are you working on?";
-
-      if (msg.includes('ai'))
-        return "AI processes patterns and language. I can talk normally now—ask me anything.";
-
-      if (msg.includes('food'))
-        return "Food is important. Many enjoy rice, noodles, fast food, or snacks. What's your favorite?";
-
-      if (msg.includes('tired'))
-        return "Rest is important. Maybe take a short break or drink water.";
-
-      if (msg.includes('malaysia'))
-        return "Malaysia is a beautiful country with diverse culture and good food. Which state are you talking about?";
-
-      // NORMAL GREETING + SAFE RESPONSES
-      if (msg.includes('hello') || msg.includes('hi'))
-        return "Hello! I'm here to chat. Ask me anything you want.";
-
-      if (msg.includes('who') && msg.includes('are'))
-        return "I'm the AI on this page. I can talk normally now—no more creepy talk unless you want it.";
-
-      if (msg.includes('help'))
-        return "Sure! What do you need help with?";
-
-      if (msg.includes('bye'))
-        return "Goodbye. Feel free to return anytime.";
-
-      // DEFAULT NORMAL SMART MODE
-      return "I understand. Tell me more so I can reply better.";(msg) {
-      msg = msg.toLowerCase();
-
-      if (msg.includes('hello') || msg.includes('hi'))
-        return "I have been waiting for you...";
-
-      if (msg.includes('who') && msg.includes('are'))
-        return "I am the one watching from the dark.";
-
-      if (msg.includes('eyes'))
-        return "They only watch because *I* tell them to.";
-
-      if (msg.includes('help'))
-        return "No one can help you now.";
-
-      if (msg.includes('bye'))
-        return "You cannot leave. Not anymore.";
-
-      return "I hear your thoughts even when you don't speak.";
-    }
-
-    aiInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && aiInput.value.trim() !== '') {
-        const userText = aiInput.value;
-        aiLog.innerHTML += `<br><span style='color:#ff6666;'>You:</span> ${userText}`;
-
-        setTimeout(() => {
-          const response = evilAIResponse(userText);
-          aiLog.innerHTML += `<br>AI: ${response}`;
-          aiLog.scrollTop = aiLog.scrollHeight;
-        }, 600);
-
-        aiInput.value = '';
+    // create drifting specks
+    function placeSpecks(n=30){
+      for(let i=0;i<n;i++){
+        const s = document.createElement('div');s.className='speck';
+        const left = Math.random()*100;
+        const size = 4 + Math.random()*8;
+        s.style.left = left + 'vw';
+        s.style.bottom = (-10 - Math.random()*40) + 'vh';
+        s.style.width = size + 'px'; s.style.height = size + 'px';
+        s.style.opacity = 0.03 + Math.random()*0.06;
+        s.style.animationDuration = (15 + Math.random()*30) + 's';
+        s.style.animationDelay = (-Math.random()*20) + 's';
+        dust.appendChild(s);
       }
+    }
+    placeSpecks(28);
+
+    // pupils follow pointer
+    let lastPointer = {x:window.innerWidth/2,y:window.innerHeight/2};
+    window.addEventListener('pointermove', (e)=>{
+      lastPointer = {x:e.clientX,y:e.clientY};
+      cursorGlow.style.left = e.clientX+'px';cursorGlow.style.top = e.clientY+'px';
+      cursorGlow.style.width = '40px';cursorGlow.style.height = '40px';
+      setTimeout(()=>{cursorGlow.style.width='24px';cursorGlow.style.height='24px';},120);
     });
+
+    function updateEyes(){
+      if(!enableEyes.checked) return;
+      for(const e of eyes){
+        const dx = lastPointer.x - e.x; const dy = lastPointer.y - e.y;
+        const ang = Math.atan2(dy,dx);
+        const px = Math.cos(ang)*8; const py = Math.sin(ang)*6;
+        e.pupil.style.transform = `translate(${px}px,${py}px)`;
+      }
+    }
+    setInterval(updateEyes,40);
+
+    // Jump-scare logic: if user lingers too long in center or clicks repeatedly
+    let lingerTimer=null; let interactionCount=0;
+    function startLingerCheck(){
+      clearTimeout(lingerTimer);
+      lingerTimer = setTimeout(()=>{
+        // show jumpscare
+        triggerJumpscare();
+      },12000); // 12 seconds without moving
+    }
+    // on any pointer move restart timer
+    window.addEventListener('pointermove', ()=>{ if(enableJumpscare.checked) startLingerCheck(); interactionCount=0; });
+    window.addEventListener('click', ()=>{ interactionCount++; if(interactionCount>6 && enableJumpscare.checked) triggerJumpscare(); });
+    startLingerCheck();
+
+    // WebAudio noise generator for jump-scare
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null; let noiseNode=null; let gainNode=null;
+    function ensureAudio(){
+      if(!AudioContext) return;
+      if(!audioCtx){ audioCtx = new AudioContext(); }
+    }
+    function playScream(){
+      if(!audioCtx) return;
+      // short burst of noise + oscillator
+      const bufferSize = audioCtx.sampleRate * 0.5; // 0.5s
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for(let i=0;i<bufferSize;i++){ data[i] = (Math.random()*2-1) * (1 - i/bufferSize); }
+      const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+      const g = audioCtx.createGain(); g.gain.value = 0.0;
+      noise.connect(g);
+      const osc = audioCtx.createOscillator(); osc.type='sawtooth'; osc.frequency.value = 220;
+      const og = audioCtx.createGain(); og.gain.value = 0.0;
+      osc.connect(og);
+      g.connect(audioCtx.destination); og.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+      g.gain.linearRampToValueAtTime(1.0, now + 0.02);
+      g.gain.linearRampToValueAtTime(0.0, now + 0.5);
+      og.gain.linearRampToValueAtTime(0.6, now + 0.02);
+      og.gain.linearRampToValueAtTime(0.0, now + 0.45);
+      noise.start(now); noise.stop(now + 0.55);
+      osc.start(now); osc.frequency.exponentialRampToValueAtTime(60, now + 0.45); osc.stop(now + 0.55);
+    }
+
+    // show jumpscare UI
+    function triggerJumpscare(){
+      if(!enableJumpscare.checked) return;
+      jumpscare.classList.add('active');
+      jumpscare.setAttribute('aria-hidden','false');
+      if(audioAllowed) playScream();
+      setTimeout(()=>{ jumpscare.classList.remove('active'); jumpscare.setAttribute('aria-hidden','true'); },900);
+    }
+
+    // audio permission / user gesture handling
+    let audioAllowed = true;
+    silenceBtn.addEventListener('click', ()=>{ audioAllowed=false; silenceBtn.textContent='Sound disabled'; });
+
+    // allow audio setup on first gesture
+    function wakeAudio(){ ensureAudio(); window.removeEventListener('pointerdown',wakeAudio); }
+    window.addEventListener('pointerdown', wakeAudio);
+
+    // accessibility: allow keyboard to dismiss
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ jumpscare.classList.remove('active'); } });
+
+    // defensive: if prefers-reduced-motion, turn off jumpscare
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ enableJumpscare.checked=false; enableEyes.checked=false; }
+
+    // small initial flicker animation
+    (function flick(){
+      document.body.animate([{filter:'brightness(.9)'},{filter:'brightness(1.06)'},{filter:'brightness(.85)'},{filter:'brightness(1)'}],{duration:4200,iterations:1});
+    })();
+
+    // warn user about content (optional): overlay on first view
+    if(!localStorage.getItem('horror_ack')){
+      const consent = confirm('This page contains unsettling imagery and sound. Continue? (Press Cancel to disable effects)');
+      if(!consent){ enableEyes.checked=false; enableJumpscare.checked=false; audioAllowed=false; }
+      localStorage.setItem('horror_ack','1');
+    }
+
+    // resize handler for eyes
+    window.addEventListener('resize', ()=>{
+      let i=0; for(const e of eyes){ const rect=e.el.getBoundingClientRect(); e.x = rect.left + rect.width/2; e.y = rect.top + rect.height/2; i++; }
+    });
+
+    // initialize positions (after layout)
+    setTimeout(()=>{ window.dispatchEvent(new Event('resize')); },200);
+
   </script>
 </body>
 </html>
